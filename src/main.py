@@ -1,39 +1,47 @@
-import pyautogui
 import keyboard
 import time
+import sys 
+from PySide6.QtCore import Qt, QTimer
+from PySide6.QtWidgets import QApplication
+from overlay import CursorOverlay
+from colour import get_cursor_pixel_colour
 
 HOTKEY = "ctrl + shift + z"
-
-def get_cursor_pixel_colour():
-    position = pyautogui.position()
-    im = pyautogui.screenshot() 
-    colour = im.getpixel(position)
-    return colour
-
-
-def RGBtoHEX(r, g, b): 
-    hex = f"#{r:02x}{g:02x}{b:02x}"
-    return hex
-
-
 state = False
+
+app = QApplication(sys.argv)
+cursor_overlay = CursorOverlay()
+
+
 
 def toggleState(): 
     global state 
     state = not state
 
 
+def quit_app():
+    keyboard.unhook_all()
+    cursor_overlay.close()
+    app.quit()
+
+
 keyboard.add_hotkey(HOTKEY, callback=toggleState)
-
-while True:
-    if state: 
-        r, g, b = get_cursor_pixel_colour()
-        hex = RGBtoHEX(r,g,b)   
-
-        print(F"({r}, {g}, {b}) | {hex}")
-        time.sleep(0.05)
-    else: 
-        time.sleep(0.1)
+keyboard.add_hotkey("ctrl+shift+q", callback=quit_app) #NOTE temporary way to quit the program
 
 
-# Takes a screenshot once every 0.05 seconds tho. 
+def update_overlay():
+    if not state: 
+        cursor_overlay.hide()
+        return 
+    
+    cursor_overlay.show()
+    (r,g,b) ,hex_colour = get_cursor_pixel_colour()
+
+    cursor_overlay.move_to_cursor()
+    cursor_overlay.update_colour(r,g,b, hex_colour)
+
+timer = QTimer() 
+timer.timeout.connect(update_overlay)
+timer.start(50)
+
+app.exec() 

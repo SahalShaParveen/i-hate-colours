@@ -1,30 +1,38 @@
 import sys
 
-from PySide6.QtCore import Qt, QTimer
-from PySide6.QtGui import QCursor, QShortcut, QKeySequence
-from PySide6.QtWidgets import QApplication, QLabel
+from PySide6.QtCore import Qt
+from PySide6.QtGui import QCursor
+from PySide6.QtWidgets import QLabel
 
 
-app = QApplication(sys.argv)
+class CursorOverlay(QLabel): 
+    def __init__(self):
+        super().__init__()
 
-label = QLabel("Hello!")
-label.setWindowFlag(Qt.FramelessWindowHint)
+        self.setWindowFlag(Qt.FramelessWindowHint)
+        self.setWindowFlag(Qt.WindowStaysOnTopHint)
+        self.setAttribute(Qt.WA_TransparentForMouseEvents)
+
+        self.setText("RGB: (0, 0, 0)\nHEX: #000000")
+
+        self.setStyleSheet("""
+            QLabel {
+                background-color: white;
+                color: black;
+                font-size: 14px;
+                font-weight: bold;
+                padding: 6px 8px;
+                border: 1px solid black;
+                border-radius: 4px;
+            }
+        """)
 
 
-def move_to_cursor():
-    position = QCursor.pos()
-    label.move(position.x() + 20, position.y() + 20)
+    def update_colour(self, r, g, b, hex_colour):
+        self.setText(f"RGB: ({r}, {g}, {b})\nHEX: {hex_colour}")
+        self.adjustSize()
 
 
-timer = QTimer()
-timer.timeout.connect(move_to_cursor)
-timer.start(20)
-
-
-shortcut = QShortcut(QKeySequence("Esc"), label)
-shortcut.activated.connect(app.quit)
-
-
-label.show()
-
-app.exec()
+    def move_to_cursor(self):
+        position = QCursor.pos()
+        self.move(position.x() + 20, position.y() + 20)     
