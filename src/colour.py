@@ -2,12 +2,10 @@ import pyautogui
 
 def get_cursor_pixel_colour():
     position = pyautogui.position()
-    print("got position")
     im = pyautogui.screenshot()
-    print("screenshot done")
     rgb = im.getpixel(position)
+    
     hex_colour = rgb_to_hex(rgb)
-    print("Got hex color")
     return rgb, hex_colour
 
  
