@@ -7,11 +7,11 @@ from overlay import CursorOverlay
 from colour import get_cursor_pixel_colour
 
 HOTKEY = "ctrl + shift + z"
+quit_requested = False
 state = False
 
 app = QApplication(sys.argv)
 cursor_overlay = CursorOverlay()
-
 
 
 def toggleState(): 
@@ -25,11 +25,20 @@ def quit_app():
     app.quit()
 
 
+def request_quit():
+    global quit_requested
+    quit_requested = True
+
+
 keyboard.add_hotkey(HOTKEY, callback=toggleState)
-keyboard.add_hotkey("ctrl+shift+q", callback=quit_app) #NOTE temporary way to quit the program
+keyboard.add_hotkey("ctrl+shift+q", callback=request_quit) #NOTE temporary way to quit the program
 
 
 def update_overlay():
+    if quit_requested:
+        quit_app()
+        return
+
     if not state: 
         cursor_overlay.hide()
         return 
