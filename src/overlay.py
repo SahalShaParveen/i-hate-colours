@@ -3,7 +3,7 @@ import sys
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QCursor
 from PySide6.QtWidgets import QLabel
-
+from colour_names import get_css_name
 
 class CursorOverlay(QLabel): 
     def __init__(self):
@@ -13,7 +13,7 @@ class CursorOverlay(QLabel):
         self.setWindowFlag(Qt.WindowStaysOnTopHint)
         self.setAttribute(Qt.WA_TransparentForMouseEvents)
 
-        self.setText("RGB: (0, 0, 0)\nHEX: #000000")
+        self.setText(" ")
 
         self.setStyleSheet("""
             QLabel {
@@ -29,8 +29,12 @@ class CursorOverlay(QLabel):
 
 
     def update_colour(self, r, g, b, hex_colour):
-        self.setText(f"RGB: ({r}, {g}, {b})\nHEX: {hex_colour}")
+        text = f"RGB: ({r}, {g}, {b})" + "\n"
+        text += f"HEX: {hex_colour}" + "\n"
+        text += f"{get_css_name(hex_colour)}"
+        self.setText(text)
         self.adjustSize()
+        self.isTopLevel = True
 
 
     def move_to_cursor(self):
