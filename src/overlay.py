@@ -28,10 +28,17 @@ class CursorOverlay(QLabel):
         """)
 
 
-    def update_colour(self, r, g, b, hex_colour):
-        text = f"RGB: ({r}, {g}, {b})" + "\n"
-        text += f"HEX: {hex_colour}" + "\n"
-        text += f"{get_css_name(hex_colour)}"
+    def update_colour(self, r, g, b, hex_colour, settings):
+        # TODO: Remove r,g,b args and only take hex
+        text=""
+
+        if settings["overlay_text"]["show_css"]: 
+            text += f"{get_css_name(hex_colour)}" + "\n"
+        if settings["overlay_text"]["show_rgb"]:
+            text += f"RGB: ({r}, {g}, {b})" + "\n"
+        if settings["overlay_text"]["show_hex"]:
+            text += f"HEX: {hex_colour}" + "\n"
+        
         self.setText(text)
         self.adjustSize()
         self.isTopLevel = True

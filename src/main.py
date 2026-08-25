@@ -1,13 +1,20 @@
 import keyboard
 import time
 import sys 
+import json
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtWidgets import QApplication
 from overlay import CursorOverlay
 from colour import get_cursor_pixel_colour
 from colour_names import get_css_name
 
-HOTKEY = "ctrl + shift + z"
+def get_settings():
+    with open("data/settings.json", "r") as f:
+        settings = json.load(f)
+        return settings
+
+
+settings = get_settings()
 quit_requested = False
 state = False
 
@@ -31,8 +38,8 @@ def request_quit():
     quit_requested = True
 
 
-keyboard.add_hotkey(HOTKEY, callback=toggleState)
-keyboard.add_hotkey("ctrl+shift+q", callback=request_quit) #NOTE temporary way to quit the program
+keyboard.add_hotkey(settings["hotkey"], callback=toggleState)
+keyboard.add_hotkey(settings["quit_hotkey"], callback=request_quit) #NOTE temporary way to quit the program
 
 
 def update_overlay():
@@ -49,10 +56,10 @@ def update_overlay():
     print(get_css_name(hex_colour))
 
     cursor_overlay.move_to_cursor()
-    cursor_overlay.update_colour(r,g,b, hex_colour)
+    cursor_overlay.update_colour(r,g,b, hex_colour, settings)
 
 timer = QTimer() 
 timer.timeout.connect(update_overlay)
-timer.start(50)
+timer.start(settings["delay_ms"])
 
 app.exec() 
