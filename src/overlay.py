@@ -2,10 +2,11 @@ import sys
 
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QCursor
-from PySide6.QtWidgets import QLabel
+from PySide6.QtWidgets import QWidget, QLabel, QFrame, QHBoxLayout
 from colour_names import get_css_name
 
-class CursorOverlay(QLabel): 
+
+class CursorOverlay(QWidget):
     def __init__(self):
         super().__init__()
 
@@ -13,37 +14,59 @@ class CursorOverlay(QLabel):
         self.setWindowFlag(Qt.WindowStaysOnTopHint)
         self.setAttribute(Qt.WA_TransparentForMouseEvents)
 
-        self.setText(" ")
+        self.layout = QHBoxLayout(self)
+        self.layout.setContentsMargins(8, 6, 8, 6)
+        self.layout.setSpacing(8)
+
+        self.colour_box = QFrame()
+        self.colour_box.setFixedSize(30, 30)
+
+        self.text_label = QLabel()
+
+        self.layout.addWidget(self.colour_box)
+        self.layout.addWidget(self.text_label)
 
         self.setStyleSheet("""
-            QLabel {
+            QWidget {
                 background-color: white;
+                border: 1px solid black;
+                border-radius: 4px;
+            }
+
+            QLabel {
+                border: none;
                 color: black;
                 font-size: 14px;
                 font-weight: bold;
-                padding: 6px 8px;
-                border: 1px solid black;
-                border-radius: 4px;
             }
         """)
 
 
-    def update_colour(self, r, g, b, hex_colour, settings):
-        # TODO: Remove r,g,b args and only take hex
-        text=""
-
-        if settings["overlay_text"]["show_css"]: 
-            text += f"{get_css_name(hex_colour)}" + "\n"
-        if settings["overlay_text"]["show_rgb"]:
-            text += f"RGB: ({r}, {g}, {b})" + "\n"
-        if settings["overlay_text"]["show_hex"]:
-            text += f"HEX: {hex_colour}" + "\n"
-        
-        self.setText(text)
-        self.adjustSize()
-        self.isTopLevel = True
-
-
     def move_to_cursor(self):
         position = QCursor.pos()
-        self.move(position.x() + 20, position.y() + 20)     
+        self.move(position.x() + 20, position.y() + 20)
+
+
+    def update_colour(self, r, g, b, hex_colour, settings):
+        text = ""
+
+        if settings["overlay_text"]["show_css"]:
+            text += f"{get_css_name(hex_colour)}\n"
+
+        if settings["overlay_text"]["show_rgb"]:
+            text += f"RGB: ({r}, {g}, {b})\n"
+
+        if settings["overlay_text"]["show_hex"]:
+            text += f"HEX: {hex_colour}"
+
+        self.text_label.setText(text)
+
+        self.colour_box.setStyleSheet(f"""
+            QFrame {{
+                background-color: {hex_colour};
+                border: 1px solid black;
+                border-radius: 3px;
+            }}
+        """)
+
+        self.adjustSize()
