@@ -50,7 +50,7 @@ class CursorOverlay(QWidget):
     def update_colour(self, r, g, b, hex_colour, settings):
         text = ""
 
-        if settings["overlay_text"]["show_css"]:
+        if settings["overlay_text"]["show_colour_name"]:
             text += f"{get_css_name(hex_colour)}\n"
 
         if settings["overlay_text"]["show_rgb"]:
