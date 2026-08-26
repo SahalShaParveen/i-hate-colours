@@ -39,6 +39,9 @@ class SettingsWindow(QWidget):
         self.apply_button = QPushButton("Apply")
         self.apply_button.clicked.connect(self.apply_settings)
 
+        self.quit_app_button = QPushButton("Quit App")
+        self.quit_app_button.clicked.connect(self.quit_app)
+
         # Layout
 
         layout = QVBoxLayout()
@@ -58,8 +61,11 @@ class SettingsWindow(QWidget):
         layout.addSpacing(10)
 
         button_layout = QHBoxLayout()
+ 
+        button_layout.addWidget(self.quit_app_button)
         button_layout.addStretch()
         button_layout.addWidget(self.apply_button)
+  
 
         layout.addLayout(button_layout)
 
@@ -68,7 +74,7 @@ class SettingsWindow(QWidget):
         # Populate GUI using JSON values
         self.load_into_gui()
 
-        
+
     # JSON
 
     def load_settings(self):
@@ -154,14 +160,5 @@ class SettingsWindow(QWidget):
 
         print("Settings saved!")
 
-
-# ***********
-# Application
-
-app = QApplication(sys.argv)
-
-window = SettingsWindow()
-window.resize(350, 250)
-window.show()
-
-sys.exit(app.exec())
+    def quit_app(self):
+        self.close() 

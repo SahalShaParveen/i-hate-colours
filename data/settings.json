@@ -1,6 +1,6 @@
 {
     "hotkey": "ctrl + shift + z",
-    "quit_hotkey": "ctrl + shift + q",
+    "config_hotkey": "ctrl + shift + q",
     "colour_system_list": [
         "css"
     ],
@@ -10,9 +10,9 @@
     "overlay_text": {
         "colour_system": "css",
         "distance_metric": "euclidean",
-        "show_colour_name": false,
-        "show_rgb": false,
-        "show_hex": false
+        "show_colour_name": true,
+        "show_rgb": true,
+        "show_hex": true
     },
     "delay_ms": 10
 }
