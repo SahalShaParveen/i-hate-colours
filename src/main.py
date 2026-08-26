@@ -55,7 +55,7 @@ hotkey_bridge = HotkeyBridge()
 hotkey_bridge.config_requested.connect(open_config_window)
 
 keyboard.add_hotkey(settings["hotkey"], callback=toggleState)
-keyboard.add_hotkey(settings["config_hotkey"], callback=hotkey_bridge.config_requested.emit) #NOTE temporary way to quit the program
+keyboard.add_hotkey(settings["config_hotkey"], callback=hotkey_bridge.config_requested.emit)
 
 
 def update_overlay():

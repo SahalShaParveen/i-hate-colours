@@ -1,6 +1,6 @@
 {
     "hotkey": "ctrl + shift + z",
-    "config_hotkey": "ctrl + shift + q",
+    "config_hotkey": "alt + shift + z",
     "colour_system_list": [
         "css"
     ],

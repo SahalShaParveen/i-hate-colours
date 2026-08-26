@@ -130,6 +130,7 @@ class SettingsWindow(QWidget):
             self.settings["overlay_text"]["distance_metric"]
         )
 
+
     def apply_settings(self):
         """
         Take values from the GUI and put them into self.settings,
@@ -157,7 +158,7 @@ class SettingsWindow(QWidget):
         )
 
         self.save_settings()
-
+        self.close()
         print("Settings saved!")
 
     def quit_app(self):
