@@ -17,12 +17,13 @@ CONFIG_FILE = "data/settings.json"
 
 
 class SettingsWindow(QWidget):
-    def __init__(self):
+    def __init__(self, hotkey_bridge):
         super().__init__()
 
         self.setWindowTitle("Settings")
-
         self.settings = self.load_settings()
+
+        self.hotkey_bridge = hotkey_bridge
 
         # Widgets
 
@@ -60,8 +61,12 @@ class SettingsWindow(QWidget):
 
         layout.addSpacing(10)
 
+        layout.addWidget(QLabel(F"Cursor Overlay hotkey: \t{self.settings["hotkey"]}"))
+        layout.addWidget(QLabel(F"Config Window hotkey: \t{self.settings["config_hotkey"]}"))
         button_layout = QHBoxLayout()
- 
+
+        layout.addSpacing(10)
+        
         button_layout.addWidget(self.quit_app_button)
         button_layout.addStretch()
         button_layout.addWidget(self.apply_button)
@@ -158,8 +163,10 @@ class SettingsWindow(QWidget):
         )
 
         self.save_settings()
+        self.hotkey_bridge.update_settings_signal.emit()
         self.close()
-        print("Settings saved!")
 
     def quit_app(self):
+        self.hotkey_bridge.quit_signal.emit()
+        
         self.close() 

@@ -10,12 +10,12 @@ from colour_names import get_css_name
 import config
 
 def get_settings():
+    global settings
     with open("data/settings.json", "r") as f:
         settings = json.load(f)
-        return settings
 
+get_settings()
 
-settings = get_settings()
 quit_requested = False
 state = False
 
@@ -40,7 +40,7 @@ def request_quit():
 
 def open_config_window(): 
     global config_window
-    config_window = config.SettingsWindow()
+    config_window = config.SettingsWindow(hotkey_bridge)
     config_window.resize(350, 250)
     config_window.show()
     config_window.raise_()
@@ -49,13 +49,21 @@ def open_config_window():
 
 class HotkeyBridge(QObject):
     config_requested = Signal()
+    quit_signal = Signal()
+    update_settings_signal = Signal() 
 
 
 hotkey_bridge = HotkeyBridge()
 hotkey_bridge.config_requested.connect(open_config_window)
+hotkey_bridge.quit_signal.connect(request_quit)
+hotkey_bridge.update_settings_signal.connect(get_settings)
 
 keyboard.add_hotkey(settings["hotkey"], callback=toggleState)
 keyboard.add_hotkey(settings["config_hotkey"], callback=hotkey_bridge.config_requested.emit)
+
+
+# Temporary quit hotkey to use when testing:
+keyboard.add_hotkey("ctrl + alt + x", callback=hotkey_bridge.quit_signal.emit)
 
 
 def update_overlay():
@@ -67,9 +75,8 @@ def update_overlay():
         cursor_overlay.hide()
         return
     
-    cursor_overlay.show()
+    cursor_overlay.show()   
     (r,g,b) ,hex_colour = get_cursor_pixel_colour()
-    print(get_css_name(hex_colour))
 
     cursor_overlay.move_to_cursor()
     cursor_overlay.update_colour(r,g,b, hex_colour, settings)
