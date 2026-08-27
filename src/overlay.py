@@ -2,7 +2,7 @@ import sys
 
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QCursor
-from PySide6.QtWidgets import QWidget, QLabel, QFrame, QHBoxLayout
+from PySide6.QtWidgets import QWidget, QLabel, QFrame, QHBoxLayout, QVBoxLayout
 from colour_names import get_css_name
 import json
 
@@ -16,32 +16,77 @@ class CursorOverlay(QWidget):
 
         self.layout = QHBoxLayout(self)
         self.layout.setContentsMargins(8, 6, 8, 6)
-        self.layout.setSpacing(8)
+        self.layout.setSpacing(12)
+
+        # Pixel colour
+        colour_layout = QVBoxLayout()
+        colour_layout.setSpacing(4)
 
         self.colour_box = QFrame()
-        self.colour_box.setFixedSize(30, 30)
+        self.colour_box.setFixedSize(50, 50)
 
-        self.css_colour_box = QFrame() 
-        self.css_colour_box.setFixedSize(30, 30)
+        colour_label = QLabel("Pixel colour")
+        colour_label.setAlignment(Qt.AlignCenter)
+        colour_label.setStyleSheet("""
+            QLabel {
+                border: none;
+                color: black;
+                font-size: 10px;
+                font-weight: normal;
+            }
+        """)
 
+        colour_layout.addWidget(self.colour_box)
+        colour_layout.addWidget(colour_label)
+
+        # Closest CSS colour
+        css_layout = QVBoxLayout()
+        css_layout.setSpacing(4)
+
+        self.css_colour_box = QFrame()
+        self.css_colour_box.setFixedSize(50, 50)
+
+        css_label = QLabel("Closest CSS")
+        css_label.setAlignment(Qt.AlignCenter)
+        css_label.setStyleSheet("""
+            QLabel {
+                border: none;
+                color: black;
+                font-size: 10px;
+                font-weight: normal;
+            }
+        """)
+
+        css_layout.addWidget(self.css_colour_box)
+        css_layout.addWidget(css_label)
+
+        # Text
         self.text_label = QLabel()
+        self.text_label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
 
-        self.layout.addWidget(self.colour_box)
-        self.layout.addWidget(self.css_colour_box)
+        self.layout.addLayout(colour_layout)
+        self.layout.addLayout(css_layout)
         self.layout.addWidget(self.text_label)
 
+        colour_label.setObjectName("colourLabel")
+        css_label.setObjectName("colourLabel")
+
         self.setStyleSheet("""
-            QWidget {
+            CursorOverlay {
                 background-color: white;
-                border: 1px solid black;
-                border-radius: 4px;
+                border: 2px solid black;
+                border-radius: 0px;
             }
 
             QLabel {
                 border: none;
                 color: black;
                 font-size: 14px;
-                font-weight: bold;
+                font-weight: normal;
+            }
+
+            QLabel#colourLabel {
+                font-size: 10px;
             }
         """)
 
@@ -50,14 +95,13 @@ class CursorOverlay(QWidget):
         position = QCursor.pos()
         self.move(position.x() + 20, position.y() + 20)
 
-
     def update_colour(self, r, g, b, hex_colour, settings):
         text = ""
 
         colour_name = get_css_name(hex_colour)
 
         if settings["overlay_text"]["show_colour_name"]:
-            text += f"{colour_name}\n"
+            text += f"Closest Match: {colour_name}\n"
 
         if settings["overlay_text"]["show_rgb"]:
             text += f"RGB: ({r}, {g}, {b})\n"
@@ -70,8 +114,8 @@ class CursorOverlay(QWidget):
         self.colour_box.setStyleSheet(f"""
             QFrame {{
                 background-color: {hex_colour};
-                border: 1px solid black;
-                border-radius: 3px;
+                border: 2px solid black;
+                border-radius: 0px;
             }}
         """)
 
@@ -79,15 +123,18 @@ class CursorOverlay(QWidget):
         with open("data/css-colours.json", "r") as f:
             css_colours = json.load(f)
 
-        for x in css_colours: 
-            if css_colours.get(x) == colour_name: 
+        css_hex = hex_colour
+
+        for x in css_colours:
+            if css_colours.get(x) == colour_name:
                 css_hex = x
+                break
 
         self.css_colour_box.setStyleSheet(f"""
             QFrame {{
                 background-color: {css_hex};
-                border: 1px solid black;
-                border-radius: 3px;
+                border: 2px solid black;
+                border-radius: 0px;
             }}
         """)
         # ......................................................
