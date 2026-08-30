@@ -1,5 +1,6 @@
 import pyautogui
 import colour 
+import json
 
 def get_cursor_pixel_colour():
     position = pyautogui.position()
@@ -10,21 +11,16 @@ def get_cursor_pixel_colour():
     return rgb, hex_colour
 
 
-def get_distance(rgb1, rgb2, distance_metric):
+def get_distance(c1_rgb, c2_lab, distance_metric):
     match distance_metric:
-        case "RGB_Euclidean":
-            r1, g1, b1 = rgb1
-            r2, g2, b2 = rgb2
-            r = r2-r1; g = g2-g1; b = b2-b1;
-            distance = (r**2 + g**2 + b**2)**(1/2)
         case "CIE76":
-            lab1 = rgb_to_lab(rgb1)
-            lab2 = rgb_to_lab(rgb2)
+            lab1 = rgb_to_lab(c1_rgb)
+            lab2 = c2_lab
             return colour.delta_E(lab1, lab2, method="CIE 1976")
 
         case "CIEDE2000":
-            lab1 = rgb_to_lab(rgb1)
-            lab2 = rgb_to_lab(rgb2)
+            lab1 = rgb_to_lab(c1_rgb)
+            lab2 = c2_lab
             return colour.delta_E(lab1, lab2, method="CIE 2000")
 
         # case "OKLab":
@@ -36,6 +32,16 @@ def get_distance(rgb1, rgb2, distance_metric):
             raise ValueError(f"Unknown distance metric: {distance_metric}")
 
 
+def convert_colour_system_to_lab(colour_system):
+    with open(f"data/{colour_system}.json", "r") as file:
+        colour_system_dict = json.load(file)
+
+    return {
+        tuple(rgb_to_lab(hex_to_rgb(colour))): value
+        for colour, value in colour_system_dict.items()
+    }
+
+        
 def rgb_to_lab(rgb): 
     rgb_normalised = [x / 255 for x in rgb]
 

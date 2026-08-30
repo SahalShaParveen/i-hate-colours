@@ -6,7 +6,7 @@
     ],
     "distance_metric_list": [
         "CIE76",
-        "CIEDE2000", 
+        "CIEDE2000",
         "RGB_Euclidean"
     ],
     "overlay_text": {
@@ -14,7 +14,7 @@
         "distance_metric": "CIEDE2000",
         "show_colour_name": true,
         "show_rgb": true,
-        "show_hex": true
+        "show_hex": false
     },
-    "delay_ms": 50
+    "delay_ms": 2
 }
