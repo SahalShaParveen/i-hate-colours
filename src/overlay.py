@@ -98,7 +98,7 @@ class CursorOverlay(QWidget):
     def update_colour(self, r, g, b, hex_colour, settings):
         text = ""
 
-        colour_name = get_css_name(hex_colour)
+        colour_name = get_css_name(hex_colour, settings["overlay_text"]["distance_metric"])
 
         if settings["overlay_text"]["show_colour_name"]:
             text += f"Closest Match: {colour_name}\n"

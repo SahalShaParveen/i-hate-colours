@@ -5,14 +5,16 @@
         "css"
     ],
     "distance_metric_list": [
-        "euclidean"
+        "CIE76",
+        "CIEDE2000", 
+        "RGB_Euclidean"
     ],
     "overlay_text": {
         "colour_system": "css",
-        "distance_metric": "euclidean",
+        "distance_metric": "CIEDE2000",
         "show_colour_name": true,
         "show_rgb": true,
         "show_hex": true
     },
-    "delay_ms": 10
+    "delay_ms": 50
 }

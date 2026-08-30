@@ -89,19 +89,24 @@ class SettingsWindow(QWidget):
 
         except FileNotFoundError:
             # Default settings if the file doesn't exist
-            return { 
-            "hotkey":"ctrl + shift + z", 
-            "quit_hotkey":"ctrl + shift + q",
-            "colour_system_list":["css"],
-            "distance_metric_list":["euclidean"],
-            "overlay_text":{
-                "show_colour_name":True,  
-                "colour_system":"CSS",
-                "distance_metric": "Eucidean",
-                "show_rgb":True, 
-                "show_hex":True
-            },
-            "delay_ms":10
+            return {
+                "hotkey": "ctrl + shift + z",
+                "config_hotkey": "alt + shift + z",
+                "colour_system_list": [
+                    "css"
+                ],
+                "distance_metric_list": [
+                    "CIE76", 
+                    "CIEDE2000"
+                ],
+                "overlay_text": {
+                    "colour_system": "css",
+                    "distance_metric": "CIEDE2000",
+                    "show_colour_name": True,
+                    "show_rgb": True,
+                    "show_hex": True
+                },
+                "delay_ms": 10
             }
         
 

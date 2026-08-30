@@ -5,8 +5,7 @@ import json
 from PySide6.QtCore import Qt, QTimer, QObject, Signal
 from PySide6.QtWidgets import QApplication
 from overlay import CursorOverlay
-from colour import get_cursor_pixel_colour
-from colour_names import get_css_name
+from colour_utils import get_cursor_pixel_colour
 import config
 
 def get_settings():
