@@ -1,14 +1,19 @@
 from dataclasses import dataclass
+
 import colour as colour_science
 
 
 @dataclass
 class Colour:
     rgb: tuple[int, int, int]
-    hex: str
     name: str | None = None
 
     _lab: tuple[float, float, float] | None = None
+
+    @property
+    def hex(self) -> str:
+        r, g, b = self.rgb
+        return f"#{r:02x}{g:02x}{b:02x}"
 
     @property
     def lab(self) -> tuple[float, float, float]:
@@ -33,6 +38,5 @@ class Colour:
 
         return cls(
             rgb=rgb,
-            hex=hex_code,
             name=name
         )
