@@ -4,6 +4,17 @@ import colour as colour_science
 import pyautogui
 
 
+def get_nearest_colour(colour: Colour, distance_metric: str, colour_system: list[Colour]) -> str: 
+    nearest_colour, nearest_distance = None, None
+
+    for c in colour_system: 
+        distance = get_distance(colour, c, distance_metric)
+        if (nearest_distance is None) or (distance < nearest_distance):
+            nearest_colour, nearest_distance = c, distance
+
+    return nearest_colour
+
+
 def load_colour_system(colour_system: str) -> list[Colour]:
     with open(f"data/{colour_system}-colours.json", "r") as file:
         colour_data = json.load(file)
