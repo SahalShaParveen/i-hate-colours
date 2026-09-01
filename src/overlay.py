@@ -3,7 +3,8 @@ import sys
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QCursor
 from PySide6.QtWidgets import QWidget, QLabel, QFrame, QHBoxLayout, QVBoxLayout
-from colour_names import get_css_name
+from colour_utils import get_nearest_colour
+from colour_model import Colour
 import json
 
 class CursorOverlay(QWidget):
@@ -95,47 +96,39 @@ class CursorOverlay(QWidget):
         position = QCursor.pos()
         self.move(position.x() + 20, position.y() + 20)
 
-    def update_colour(self, r, g, b, hex_colour, settings):
-        text = ""
 
-        colour_name = get_css_name(hex_colour, settings["overlay_text"]["distance_metric"])
+    def update_overlay(self, colour: Colour, settings: dict): 
+        nearest_colour = get_nearest_colour(colour, settings["overlay_text"]["distance_metric"])
+
+        text = "" 
 
         if settings["overlay_text"]["show_colour_name"]:
-            text += f"Closest Match: {colour_name}\n"
+            text += f"Closest Match: {nearest_colour.name}\n"
 
         if settings["overlay_text"]["show_rgb"]:
+            r, g, b = colour.rgb
             text += f"RGB: ({r}, {g}, {b})\n"
 
         if settings["overlay_text"]["show_hex"]:
-            text += f"HEX: {hex_colour}"
+            text += f"HEX: {colour.hex}"
 
         self.text_label.setText(text)
 
+
         self.colour_box.setStyleSheet(f"""
             QFrame {{
-                background-color: {hex_colour};
+                background-color: {colour.hex};
                 border: 2px solid black;
                 border-radius: 0px;
             }}
         """)
-
-        #NOTE: .....TEMPORARY. TO REMOVE OR CHANGE LATER:.....
-        with open("data/css-colours.json", "r") as f:
-            css_colours = json.load(f)
-
-        css_hex = hex_colour
-
-        for x in css_colours:
-            if css_colours.get(x) == colour_name:
-                css_hex = x
-                break
 
         self.css_colour_box.setStyleSheet(f"""
             QFrame {{
-                background-color: {css_hex};
+                background-color: {nearest_colour.hex};
                 border: 2px solid black;
                 border-radius: 0px;
             }}
         """)
-        # ......................................................
+
         self.adjustSize()
