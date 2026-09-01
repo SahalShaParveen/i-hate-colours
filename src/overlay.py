@@ -1,11 +1,9 @@
-import sys
-
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QCursor
 from PySide6.QtWidgets import QWidget, QLabel, QFrame, QHBoxLayout, QVBoxLayout
 from colour_utils import get_nearest_colour
 from colour_model import Colour
-import json
+
 
 class CursorOverlay(QWidget):
     def __init__(self):
@@ -19,58 +17,15 @@ class CursorOverlay(QWidget):
         self.layout.setContentsMargins(8, 6, 8, 6)
         self.layout.setSpacing(12)
 
-        # Pixel colour
-        colour_layout = QVBoxLayout()
-        colour_layout.setSpacing(4)
+        self.pixel_colour_thumbnail = ColourThumbnail("Pixel colour")
+        self.nearest_colour_thumbnail = ColourThumbnail("Nearest CSS colour")
 
-        self.colour_box = QFrame()
-        self.colour_box.setFixedSize(50, 50)
-
-        colour_label = QLabel("Pixel colour")
-        colour_label.setAlignment(Qt.AlignCenter)
-        colour_label.setStyleSheet("""
-            QLabel {
-                border: none;
-                color: black;
-                font-size: 10px;
-                font-weight: normal;
-            }
-        """)
-
-        colour_layout.addWidget(self.colour_box)
-        colour_layout.addWidget(colour_label)
-
-        # Closest CSS colour
-        css_layout = QVBoxLayout()
-        css_layout.setSpacing(4)
-
-        self.css_colour_box = QFrame()
-        self.css_colour_box.setFixedSize(50, 50)
-
-        css_label = QLabel("Closest CSS")
-        css_label.setAlignment(Qt.AlignCenter)
-        css_label.setStyleSheet("""
-            QLabel {
-                border: none;
-                color: black;
-                font-size: 10px;
-                font-weight: normal;
-            }
-        """)
-
-        css_layout.addWidget(self.css_colour_box)
-        css_layout.addWidget(css_label)
-
-        # Text
         self.text_label = QLabel()
-        self.text_label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+        self.text_label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
 
-        self.layout.addLayout(colour_layout)
-        self.layout.addLayout(css_layout)
+        self.layout.addWidget(self.pixel_colour_thumbnail)
+        self.layout.addWidget(self.nearest_colour_thumbnail)
         self.layout.addWidget(self.text_label)
-
-        colour_label.setObjectName("colourLabel")
-        css_label.setObjectName("colourLabel")
 
         self.setStyleSheet("""
             CursorOverlay {
@@ -91,16 +46,15 @@ class CursorOverlay(QWidget):
             }
         """)
 
-
     def move_to_cursor(self):
         position = QCursor.pos()
         self.move(position.x() + 20, position.y() + 20)
 
+    def update_overlay(self, colour: Colour, settings: dict):
+        nearest_colour = get_nearest_colour(
+            colour, settings["overlay_text"]["distance_metric"])
 
-    def update_overlay(self, colour: Colour, settings: dict): 
-        nearest_colour = get_nearest_colour(colour, settings["overlay_text"]["distance_metric"])
-
-        text = "" 
+        text = ""
 
         if settings["overlay_text"]["show_colour_name"]:
             text += f"Closest Match: {nearest_colour.name}\n"
@@ -114,7 +68,36 @@ class CursorOverlay(QWidget):
 
         self.text_label.setText(text)
 
+        self.pixel_colour_thumbnail.set_colour(colour)
+        self.nearest_colour_thumbnail.set_colour(nearest_colour)
 
+        self.adjustSize()
+
+
+class ColourThumbnail(QWidget):
+    def __init__(self, text: str, size: int = 50):
+        super().__init__()
+
+        self.size = size
+
+        layout = QVBoxLayout(self)
+        layout.setSpacing(4)
+        layout.setContentsMargins(0, 0, 0, 0)
+
+        self.colour_box = QFrame()
+        self.colour_box.setFixedSize(size, size)
+
+        self.label = QLabel(text)
+        self.label.setObjectName("colourLabel")
+        self.label.setFixedWidth(size)
+        self.label.setWordWrap(True)
+        self.label.setAlignment(Qt.AlignCenter)
+
+        layout.addWidget(self.colour_box, alignment=Qt.AlignHCenter)
+
+        layout.addWidget(self.label)
+
+    def set_colour(self, colour: Colour):
         self.colour_box.setStyleSheet(f"""
             QFrame {{
                 background-color: {colour.hex};
@@ -122,13 +105,3 @@ class CursorOverlay(QWidget):
                 border-radius: 0px;
             }}
         """)
-
-        self.css_colour_box.setStyleSheet(f"""
-            QFrame {{
-                background-color: {nearest_colour.hex};
-                border: 2px solid black;
-                border-radius: 0px;
-            }}
-        """)
-
-        self.adjustSize()
