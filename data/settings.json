@@ -12,7 +12,8 @@
         "closest_colour_thumbnail": true
     },
     "colour_system_list": [
-        "css"
+        "css",
+        "xkcd"
     ],
     "distance_metric_list": [
         "CIE76",

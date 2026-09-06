@@ -16,7 +16,7 @@ def get_nearest_colour(colour: Colour, distance_metric: str, colour_system: list
 
 
 def load_colour_system(colour_system: str) -> list[Colour]:
-    with open(f"data/{colour_system}-colours.json", "r") as file:
+    with open(f"data/colour_systems/{colour_system}.json", "r") as file:
         colour_data = json.load(file)
 
     return [

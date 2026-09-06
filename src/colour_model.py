@@ -27,7 +27,6 @@ class Colour:
 
         return self._lab
 
-
     @classmethod
     def from_hex(cls, hex_code: str, name: str | None = None):
         rgb = (
