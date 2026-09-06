@@ -22,15 +22,15 @@ def get_settings():
 get_settings()
 
 quit_requested = False
-state = False
+overlay_enabled = False
 
 app = QApplication(sys.argv)
 cursor_overlay = CursorOverlay()
 
 
 def toggleState():
-    global state
-    state = not state
+    global overlay_enabled
+    overlay_enabled = not overlay_enabled
 
 
 def quit_app():
@@ -73,19 +73,28 @@ keyboard.add_hotkey(settings["config_hotkey"],
 keyboard.add_hotkey("ctrl + alt + x", callback=hotkey_bridge.quit_signal.emit)
 
 
+last_colour = None
+
+
 def update_overlay():
+    global last_colour
     if quit_requested:
         quit_app()
         return
 
-    if not state:
+    if not overlay_enabled:
         cursor_overlay.hide()
         return
 
     cursor_overlay.show()
-    pixel_colour = get_cursor_pixel_colour()
 
     cursor_overlay.move_to_cursor()
+    pixel_colour = get_cursor_pixel_colour()
+
+    if pixel_colour == last_colour:
+        return
+
+    last_colour = pixel_colour
     cursor_overlay.update_overlay(pixel_colour, settings, colour_system)
 
 

@@ -32,10 +32,12 @@ class SettingsWindow(QWidget):
         self.show_hex_checkbox = QCheckBox("Show Hex code")
 
         self.colour_system_dropdown = QComboBox()
-        self.colour_system_dropdown.addItems(self.settings["colour_system_list"])
+        self.colour_system_dropdown.addItems(
+            self.settings["colour_system_list"])
 
         self.distance_metric_dropdown = QComboBox()
-        self.distance_metric_dropdown.addItems(self.settings["distance_metric_list"])
+        self.distance_metric_dropdown.addItems(
+            self.settings["distance_metric_list"])
 
         self.apply_button = QPushButton("Apply")
         self.apply_button.clicked.connect(self.apply_settings)
@@ -61,16 +63,17 @@ class SettingsWindow(QWidget):
 
         layout.addSpacing(10)
 
-        layout.addWidget(QLabel(F"Cursor Overlay hotkey: \t{self.settings["hotkey"]}"))
-        layout.addWidget(QLabel(F"Config Window hotkey: \t{self.settings["config_hotkey"]}"))
+        layout.addWidget(
+            QLabel(f"Cursor Overlay hotkey: \t{self.settings['hotkey']}"))
+        layout.addWidget(
+            QLabel(f"Config Window hotkey: \t{self.settings['config_hotkey']}"))
         button_layout = QHBoxLayout()
 
         layout.addSpacing(10)
-        
+
         button_layout.addWidget(self.quit_app_button)
         button_layout.addStretch()
         button_layout.addWidget(self.apply_button)
-  
 
         layout.addLayout(button_layout)
 
@@ -78,7 +81,6 @@ class SettingsWindow(QWidget):
 
         # Populate GUI using JSON values
         self.load_into_gui()
-
 
     # JSON
 
@@ -96,7 +98,7 @@ class SettingsWindow(QWidget):
                     "css"
                 ],
                 "distance_metric_list": [
-                    "CIE76", 
+                    "CIE76",
                     "CIEDE2000"
                 ],
                 "overlay_text": {
@@ -108,12 +110,10 @@ class SettingsWindow(QWidget):
                 },
                 "delay_ms": 10
             }
-        
 
     def save_settings(self):
         with open(CONFIG_FILE, "w") as file:
             json.dump(self.settings, file, indent=4)
-
 
     def load_into_gui(self):
         """
@@ -139,7 +139,6 @@ class SettingsWindow(QWidget):
         self.distance_metric_dropdown.setCurrentText(
             self.settings["overlay_text"]["distance_metric"]
         )
-
 
     def apply_settings(self):
         """
@@ -173,5 +172,5 @@ class SettingsWindow(QWidget):
 
     def quit_app(self):
         self.hotkey_bridge.quit_signal.emit()
-        
-        self.close() 
+
+        self.close()

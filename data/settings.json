@@ -16,5 +16,5 @@
         "show_rgb": true,
         "show_hex": false
     },
-    "delay_ms": 2
+    "delay_ms": 20
 }
