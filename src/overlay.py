@@ -50,9 +50,9 @@ class CursorOverlay(QWidget):
         position = QCursor.pos()
         self.move(position.x() + 20, position.y() + 20)
 
-    def update_overlay(self, colour: Colour, settings: dict):
+    def update_overlay(self, colour: Colour, settings: dict, colour_system: list[Colour]):
         nearest_colour = get_nearest_colour(
-            colour, settings["overlay_text"]["distance_metric"])
+            colour, settings["overlay_text"]["distance_metric"], colour_system)
 
         text = ""
 
