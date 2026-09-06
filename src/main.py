@@ -15,8 +15,7 @@ def get_settings():
     with open("data/settings.json", "r") as f:
         settings = json.load(f)
 
-    colour_system = load_colour_system(
-        settings["overlay_text"]["colour_system"])
+    colour_system = load_colour_system(settings["colour_system"])
 
 
 get_settings()

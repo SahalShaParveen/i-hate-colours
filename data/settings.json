@@ -1,6 +1,16 @@
 {
     "hotkey": "ctrl + shift + z",
     "config_hotkey": "alt + shift + z",
+    "colour_system": "css",
+    "distance_metric": "CIE76",
+    "delay_ms": 20,
+    "overlay": {
+        "colour_name": true,
+        "rgb": true,
+        "hex": true,
+        "colour_thumbnail": true,
+        "closest_colour_thumbnail": true
+    },
     "colour_system_list": [
         "css"
     ],
@@ -8,13 +18,5 @@
         "CIE76",
         "CIEDE2000",
         "RGB_Euclidean"
-    ],
-    "overlay_text": {
-        "colour_system": "css",
-        "distance_metric": "CIE76",
-        "show_colour_name": true,
-        "show_rgb": false,
-        "show_hex": false
-    },
-    "delay_ms": 20
+    ]
 }

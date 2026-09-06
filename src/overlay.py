@@ -21,7 +21,7 @@ class CursorOverlay(QWidget):
         self.nearest_colour_thumbnail = ColourThumbnail("Nearest CSS colour")
 
         self.text_label = QLabel()
-        self.text_label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        self.text_label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
 
         self.layout.addWidget(self.pixel_colour_thumbnail)
         self.layout.addWidget(self.nearest_colour_thumbnail)
@@ -65,18 +65,18 @@ class CursorOverlay(QWidget):
 
     def update_overlay(self, colour: Colour, settings: dict, colour_system: list[Colour]):
         nearest_colour = get_nearest_colour(
-            colour, settings["overlay_text"]["distance_metric"], colour_system)
+            colour, settings["distance_metric"], colour_system)
 
         text = ""
 
-        if settings["overlay_text"]["show_colour_name"]:
+        if settings["overlay"]["colour_name"]:
             text += f"Closest Match: {nearest_colour.name}\n"
 
-        if settings["overlay_text"]["show_rgb"]:
+        if settings["overlay"]["rgb"]:
             r, g, b = colour.rgb
             text += f"RGB: ({r}, {g}, {b})\n"
 
-        if settings["overlay_text"]["show_hex"]:
+        if settings["overlay"]["hex"]:
             text += f"HEX: {colour.hex}"
 
         self.text_label.setText(text)

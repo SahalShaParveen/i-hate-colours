@@ -96,21 +96,24 @@ class SettingsWindow(QWidget):
             return {
                 "hotkey": "ctrl + shift + z",
                 "config_hotkey": "alt + shift + z",
+                "colour_system": "css",
+                "distance_metric": "CIE76",
+                "delay_ms": 20,
+                "overlay": {
+                    "colour_name": True,
+                    "rgb": True,
+                    "hex": True,
+                    "colour_thumbnail": True,
+                    "closest_colour_thumbnail": True
+                },
                 "colour_system_list": [
                     "css"
                 ],
                 "distance_metric_list": [
                     "CIE76",
-                    "CIEDE2000"
-                ],
-                "overlay_text": {
-                    "colour_system": "css",
-                    "distance_metric": "CIEDE2000",
-                    "show_colour_name": True,
-                    "show_rgb": True,
-                    "show_hex": True
-                },
-                "delay_ms": 10
+                    "CIEDE2000",
+                    "RGB_Euclidean"
+                ]
             }
 
     def save_settings(self):
@@ -123,23 +126,23 @@ class SettingsWindow(QWidget):
         """
 
         self.show_colour_name_checkbox.setChecked(
-            self.settings["overlay_text"]["show_colour_name"]
+            self.settings["overlay"]["colour_name"]
         )
 
         self.show_rgb_checkbox.setChecked(
-            self.settings["overlay_text"]["show_rgb"]
+            self.settings["overlay"]["rgb"]
         )
 
         self.show_hex_checkbox.setChecked(
-            self.settings["overlay_text"]["show_hex"]
+            self.settings["overlay"]["hex"]
         )
 
         self.colour_system_dropdown.setCurrentText(
-            self.settings["overlay_text"]["colour_system"]
+            self.settings["colour_system"]
         )
 
         self.distance_metric_dropdown.setCurrentText(
-            self.settings["overlay_text"]["distance_metric"]
+            self.settings["distance_metric"]
         )
 
     def apply_settings(self):
@@ -148,23 +151,23 @@ class SettingsWindow(QWidget):
         then save them to JSON.
         """
 
-        self.settings["overlay_text"]["show_colour_name"] = (
+        self.settings["overlay"]["colour_name"] = (
             self.show_colour_name_checkbox.isChecked()
         )
 
-        self.settings["overlay_text"]["show_rgb"] = (
+        self.settings["overlay"]["rgb"] = (
             self.show_rgb_checkbox.isChecked()
         )
 
-        self.settings["overlay_text"]["show_hex"] = (
+        self.settings["overlay"]["hex"] = (
             self.show_hex_checkbox.isChecked()
         )
 
-        self.settings["overlay_text"]["colour_system"] = (
+        self.settings["colour_system"] = (
             self.colour_system_dropdown.currentText()
         )
 
-        self.settings["overlay_text"]["distance_metric"] = (
+        self.settings["distance_metric"] = (
             self.distance_metric_dropdown.currentText()
         )
 
