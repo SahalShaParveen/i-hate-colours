@@ -94,7 +94,6 @@ def update_overlay():
 
     cursor_overlay.show()
 
-    cursor_overlay.move_to_cursor()
     pixel_colour = get_cursor_pixel_colour()
 
     if pixel_colour == last_colour:
@@ -102,6 +101,7 @@ def update_overlay():
 
     last_colour = pixel_colour
     cursor_overlay.update_overlay(pixel_colour, settings, colour_system)
+    cursor_overlay.move_to_cursor()
 
 
 timer = QTimer()

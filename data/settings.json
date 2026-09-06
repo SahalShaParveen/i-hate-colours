@@ -11,10 +11,10 @@
     ],
     "overlay_text": {
         "colour_system": "css",
-        "distance_metric": "CIEDE2000",
+        "distance_metric": "CIE76",
         "show_colour_name": true,
-        "show_rgb": true,
-        "show_hex": true
+        "show_rgb": false,
+        "show_hex": false
     },
     "delay_ms": 20
 }

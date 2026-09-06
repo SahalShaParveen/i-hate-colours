@@ -48,7 +48,20 @@ class CursorOverlay(QWidget):
 
     def move_to_cursor(self):
         position = QCursor.pos()
-        self.move(position.x() + 20, position.y() + 20)
+
+        screen = self.screen()
+        screen_geometry = screen.availableGeometry()
+
+        x = position.x() + 20
+        y = position.y() + 20
+
+        if x + self.width() > screen_geometry.right():
+            x = position.x() - self.width() - 20
+
+        if y + self.height() > screen_geometry.bottom():
+            y = position.y() - self.height() - 20
+
+        self.move(x, y)
 
     def update_overlay(self, colour: Colour, settings: dict, colour_system: list[Colour]):
         nearest_colour = get_nearest_colour(
