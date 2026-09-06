@@ -25,7 +25,10 @@ quit_requested = False
 overlay_enabled = False
 
 app = QApplication(sys.argv)
+app.setQuitOnLastWindowClosed(False)
 cursor_overlay = CursorOverlay()
+
+config_window = None
 
 
 def toggleState():
@@ -46,8 +49,11 @@ def request_quit():
 
 def open_config_window():
     global config_window
-    config_window = config.SettingsWindow(hotkey_bridge)
-    config_window.resize(350, 250)
+
+    if config_window is None:
+        config_window = config.SettingsWindow(hotkey_bridge)
+        config_window.resize(350, 250)
+
     config_window.show()
     config_window.raise_()
     config_window.activateWindow()

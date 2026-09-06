@@ -14,7 +14,7 @@
         "distance_metric": "CIEDE2000",
         "show_colour_name": true,
         "show_rgb": true,
-        "show_hex": false
+        "show_hex": true
     },
     "delay_ms": 20
 }

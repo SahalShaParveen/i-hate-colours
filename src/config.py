@@ -1,5 +1,6 @@
 import json
 import sys
+from PySide6.QtCore import Qt
 
 from PySide6.QtWidgets import (
     QApplication,
@@ -21,6 +22,7 @@ class SettingsWindow(QWidget):
         super().__init__()
 
         self.setWindowTitle("Settings")
+        self.setWindowFlag(Qt.WindowStaysOnTopHint)
         self.settings = self.load_settings()
 
         self.hotkey_bridge = hotkey_bridge
