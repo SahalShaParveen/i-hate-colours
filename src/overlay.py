@@ -18,13 +18,14 @@ class CursorOverlay(QWidget):
         self.layout.setSpacing(12)
 
         self.pixel_colour_thumbnail = ColourThumbnail("Pixel colour")
-        self.nearest_colour_thumbnail = ColourThumbnail("Nearest CSS colour")
+        self.layout.addWidget(self.pixel_colour_thumbnail)
+
+        self.nearest_colour_thumbnail = ColourThumbnail(
+            "Nearest CSS colour")
+        self.layout.addWidget(self.nearest_colour_thumbnail)
 
         self.text_label = QLabel()
         self.text_label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
-
-        self.layout.addWidget(self.pixel_colour_thumbnail)
-        self.layout.addWidget(self.nearest_colour_thumbnail)
         self.layout.addWidget(self.text_label)
 
         self.setStyleSheet("""
@@ -83,6 +84,14 @@ class CursorOverlay(QWidget):
 
         self.pixel_colour_thumbnail.set_colour(colour)
         self.nearest_colour_thumbnail.set_colour(nearest_colour)
+
+        self.pixel_colour_thumbnail.setVisible(
+            settings["overlay"]["colour_thumbnail"]
+        )
+
+        self.nearest_colour_thumbnail.setVisible(
+            settings["overlay"]["nearest_colour_thumbnail"]
+        )
 
         self.adjustSize()
 

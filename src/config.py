@@ -27,39 +27,36 @@ class SettingsWindow(QWidget):
 
         self.hotkey_bridge = hotkey_bridge
 
-        # Widgets
-
-        self.show_colour_name_checkbox = QCheckBox("Show colour name")
-        self.show_rgb_checkbox = QCheckBox("Show RGB values")
-        self.show_hex_checkbox = QCheckBox("Show Hex code")
-
-        self.colour_system_dropdown = QComboBox()
-        self.colour_system_dropdown.addItems(
-            self.settings["colour_system_list"])
-
-        self.distance_metric_dropdown = QComboBox()
-        self.distance_metric_dropdown.addItems(
-            self.settings["distance_metric_list"])
-
-        self.apply_button = QPushButton("Apply")
-        self.apply_button.clicked.connect(self.apply_settings)
-
-        self.quit_app_button = QPushButton("Quit App")
-        self.quit_app_button.clicked.connect(self.quit_app)
-
-        # Layout
-
         layout = QVBoxLayout()
 
         layout.addWidget(QLabel("Settings"))
 
+        self.show_colour_name_checkbox = QCheckBox("Show colour name")
         layout.addWidget(self.show_colour_name_checkbox)
+
+        self.show_rgb_checkbox = QCheckBox("Show RGB values")
         layout.addWidget(self.show_rgb_checkbox)
+
+        self.show_hex_checkbox = QCheckBox("Show Hex code")
         layout.addWidget(self.show_hex_checkbox)
 
+        self.show_colour_thumbnail_checkbox = QCheckBox(
+            "Show pixel colour thumbnail")
+        layout.addWidget(self.show_colour_thumbnail_checkbox)
+
+        self.show_nearest_colour_thumbnail_checkbox = QCheckBox(
+            "Show nearest colour thumbnail")
+        layout.addWidget(self.show_nearest_colour_thumbnail_checkbox)
+
+        self.colour_system_dropdown = QComboBox()
+        self.colour_system_dropdown.addItems(
+            self.settings["colour_system_list"])
         layout.addWidget(QLabel("Colour naming system:"))
         layout.addWidget(self.colour_system_dropdown)
 
+        self.distance_metric_dropdown = QComboBox()
+        self.distance_metric_dropdown.addItems(
+            self.settings["distance_metric_list"])
         layout.addWidget(QLabel("Colour distance:"))
         layout.addWidget(self.distance_metric_dropdown)
 
@@ -69,19 +66,25 @@ class SettingsWindow(QWidget):
             QLabel(f"Cursor Overlay hotkey: \t{self.settings['hotkey']}"))
         layout.addWidget(
             QLabel(f"Config Window hotkey: \t{self.settings['config_hotkey']}"))
+
         button_layout = QHBoxLayout()
 
         layout.addSpacing(10)
 
+        self.quit_app_button = QPushButton("Quit App")
+        self.quit_app_button.clicked.connect(self.quit_app)
         button_layout.addWidget(self.quit_app_button)
+
         button_layout.addStretch()
+
+        self.apply_button = QPushButton("Apply")
+        self.apply_button.clicked.connect(self.apply_settings)
         button_layout.addWidget(self.apply_button)
 
         layout.addLayout(button_layout)
 
         self.setLayout(layout)
 
-        # Populate GUI using JSON values
         self.load_into_gui()
 
     # JSON
@@ -104,7 +107,7 @@ class SettingsWindow(QWidget):
                     "rgb": True,
                     "hex": True,
                     "colour_thumbnail": True,
-                    "closest_colour_thumbnail": True
+                    "nearest_colour_thumbnail": True
                 },
                 "colour_system_list": [
                     "css"
@@ -137,6 +140,14 @@ class SettingsWindow(QWidget):
             self.settings["overlay"]["hex"]
         )
 
+        self.show_colour_thumbnail_checkbox.setChecked(
+            self.settings["overlay"]["colour_thumbnail"]
+        )
+
+        self.show_nearest_colour_thumbnail_checkbox.setChecked(
+            self.settings["overlay"]["nearest_colour_thumbnail"]
+        )
+
         self.colour_system_dropdown.setCurrentText(
             self.settings["colour_system"]
         )
@@ -161,6 +172,14 @@ class SettingsWindow(QWidget):
 
         self.settings["overlay"]["hex"] = (
             self.show_hex_checkbox.isChecked()
+        )
+
+        self.settings["overlay"]["colour_thumbnail"] = (
+            self.show_colour_thumbnail_checkbox.isChecked()
+        )
+
+        self.settings["overlay"]["nearest_colour_thumbnail"] = (
+            self.show_nearest_colour_thumbnail_checkbox.isChecked()
         )
 
         self.settings["colour_system"] = (
