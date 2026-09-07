@@ -2,17 +2,7 @@ import json
 from colour_model import Colour
 import colour as colour_science
 import pyautogui
-
-
-def get_nearest_colour(colour: Colour, distance_metric: str, colour_system: list[Colour]) -> Colour:
-    nearest_colour, nearest_distance = None, None
-
-    for c in colour_system:
-        distance = get_distance(colour, c, distance_metric)
-        if (nearest_distance is None) or (distance < nearest_distance):
-            nearest_colour, nearest_distance = c, distance
-
-    return nearest_colour
+import numpy as np
 
 
 def load_colour_system(colour_system: str) -> list[Colour]:
@@ -25,27 +15,44 @@ def load_colour_system(colour_system: str) -> list[Colour]:
     ]
 
 
-def get_distance(c1: Colour, c2: Colour, distance_metric: str) -> float:
+def get_nearest_colour(colour: Colour, distance_metric: str, colour_system: list[Colour]) -> Colour:
     match distance_metric:
-
         case "RGB_Euclidean":
-            return (
-                (c1.rgb[0] - c2.rgb[0]) ** 2
-                + (c1.rgb[1] - c2.rgb[1]) ** 2
-                + (c1.rgb[2] - c2.rgb[2]) ** 2
-            ) ** 0.5
+            reference_rgbs = np.array([
+                c.rgb
+                for c in colour_system
+            ])
+
+            pixel_rgb = np.array(colour.rgb)
+
+            distances = np.sqrt(
+                np.sum(
+                    (reference_rgbs - pixel_rgb) ** 2,
+                    axis=1
+                )
+            )
 
         case "CIE76":
-            return colour_science.delta_E(
-                c1.lab,
-                c2.lab,
+            reference_labs = np.array([
+                c.lab
+                for c in colour_system
+            ])
+
+            distances = colour_science.delta_E(
+                colour.lab,
+                reference_labs,
                 method="CIE 1976"
             )
 
         case "CIEDE2000":
-            return colour_science.delta_E(
-                c1.lab,
-                c2.lab,
+            reference_labs = np.array([
+                c.lab
+                for c in colour_system
+            ])
+
+            distances = colour_science.delta_E(
+                colour.lab,
+                reference_labs,
                 method="CIE 2000"
             )
 
@@ -53,6 +60,10 @@ def get_distance(c1: Colour, c2: Colour, distance_metric: str) -> float:
             raise ValueError(
                 f"Unknown distance metric: {distance_metric}"
             )
+
+    nearest_index = np.argmin(distances)
+
+    return colour_system[nearest_index]
 
 
 def get_cursor_pixel_colour() -> Colour:

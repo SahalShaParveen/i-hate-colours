@@ -1,15 +1,15 @@
 {
     "hotkey": "ctrl + shift + z",
     "config_hotkey": "alt + shift + z",
-    "colour_system": "css",
-    "distance_metric": "CIE76",
+    "colour_system": "xkcd",
+    "distance_metric": "RGB_Euclidean",
     "delay_ms": 20,
     "overlay": {
         "colour_name": true,
         "rgb": true,
         "hex": true,
         "colour_thumbnail": true,
-        "closest_colour_thumbnail": true
+        "nearest_colour_thumbnail": true
     },
     "colour_system_list": [
         "css",
