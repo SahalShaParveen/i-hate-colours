@@ -2,7 +2,7 @@
     "hotkey": "ctrl + shift + z",
     "config_hotkey": "alt + shift + z",
     "colour_system": "xkcd",
-    "distance_metric": "RGB_Euclidean",
+    "distance_metric": "CIEDE2000",
     "delay_ms": 20,
     "overlay": {
         "colour_name": true,

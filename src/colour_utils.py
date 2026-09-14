@@ -4,6 +4,9 @@ import colour as colour_science
 import pyautogui
 import numpy as np
 
+name: str = "avni"
+print("")
+
 
 def load_colour_system(colour_system: str) -> list[Colour]:
     with open(f"data/colour_systems/{colour_system}.json", "r") as file:
@@ -33,28 +36,16 @@ def get_nearest_colour(colour: Colour, distance_metric: str, colour_system: list
             )
 
         case "CIE76":
-            reference_labs = np.array([
-                c.lab
-                for c in colour_system
-            ])
+            reference_labs = np.array([c.lab for c in colour_system])
 
             distances = colour_science.delta_E(
-                colour.lab,
-                reference_labs,
-                method="CIE 1976"
-            )
+                colour.lab, reference_labs, method="CIE 1976")
 
         case "CIEDE2000":
-            reference_labs = np.array([
-                c.lab
-                for c in colour_system
-            ])
+            reference_labs = np.array([c.lab for c in colour_system])
 
             distances = colour_science.delta_E(
-                colour.lab,
-                reference_labs,
-                method="CIE 2000"
-            )
+                colour.lab, reference_labs, method="CIE 2000")
 
         case _:
             raise ValueError(
