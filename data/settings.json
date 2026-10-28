@@ -2,14 +2,17 @@
     "hotkey": "ctrl + shift + z",
     "config_hotkey": "alt + shift + z",
     "colour_system": "xkcd",
-    "distance_metric": "CIEDE2000",
+    "distance_metric": "CIE76",
     "delay_ms": 20,
     "overlay": {
         "colour_name": true,
-        "rgb": true,
-        "hex": true,
-        "colour_thumbnail": true,
-        "nearest_colour_thumbnail": true
+        "rgb": false,
+        "hex": false,
+        "colour_thumbnail": false,
+        "nearest_colour_thumbnail": true,
+        "thumbnail_size": 45,
+        "font_size": 30,
+        "thumbnail_label_font_size": 12
     },
     "colour_system_list": [
         "css",

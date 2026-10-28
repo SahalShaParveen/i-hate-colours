@@ -11,6 +11,9 @@ from PySide6.QtWidgets import (
     QCheckBox,
     QComboBox,
     QPushButton,
+    QPushButton,
+    QSpinBox,
+    QSlider
 )
 
 
@@ -47,6 +50,30 @@ class SettingsWindow(QWidget):
         self.show_nearest_colour_thumbnail_checkbox = QCheckBox(
             "Show nearest colour thumbnail")
         layout.addWidget(self.show_nearest_colour_thumbnail_checkbox)
+
+        # Font size control
+        self.font_size_spinbox, self.font_size_slider = (
+            self.create_size_control(
+                "Font size:",
+                "font_size",
+                default=14,
+                minimum=6,
+                maximum=72,
+                layout=layout,
+            )
+        )
+
+        # Thumbnail size control
+        self.thumbnail_size_spinbox, self.thumbnail_size_slider = (
+            self.create_size_control(
+                "Thumbnail size:",
+                "thumbnail_size",
+                default=50,
+                minimum=10,
+                maximum=150,
+                layout=layout,
+            )
+        )
 
         self.colour_system_dropdown = QComboBox()
         self.colour_system_dropdown.addItems(
@@ -107,7 +134,9 @@ class SettingsWindow(QWidget):
                     "rgb": True,
                     "hex": True,
                     "colour_thumbnail": True,
-                    "nearest_colour_thumbnail": True
+                    "nearest_colour_thumbnail": True,
+                    "font_size": 45,
+                    "thumbnail_size": 30
                 },
                 "colour_system_list": [
                     "css"
@@ -122,6 +151,42 @@ class SettingsWindow(QWidget):
     def save_settings(self):
         with open(CONFIG_FILE, "w") as file:
             json.dump(self.settings, file, indent=4)
+
+    def create_size_control(
+        self,
+        label_text: str,
+        setting_key: str,
+        default: int,
+        minimum: int,
+        maximum: int,
+        layout: QVBoxLayout,
+    ):
+        row = QHBoxLayout()
+
+        label = QLabel(label_text)
+        row.addWidget(label)
+
+        spinbox = QSpinBox()
+        spinbox.setRange(minimum, maximum)
+        spinbox.setValue(
+            self.settings["overlay"].get(setting_key, default)
+        )
+        row.addWidget(spinbox)
+
+        slider = QSlider(Qt.Horizontal)
+        slider.setRange(minimum, maximum)
+        slider.setValue(spinbox.value())
+        row.addWidget(slider, stretch=1)
+
+        # Typing a number updates the slider.
+        spinbox.valueChanged.connect(slider.setValue)
+
+        # Moving the slider updates the number.
+        slider.valueChanged.connect(spinbox.setValue)
+
+        layout.addLayout(row)
+
+        return spinbox, slider
 
     def load_into_gui(self):
         """
@@ -188,6 +253,14 @@ class SettingsWindow(QWidget):
 
         self.settings["distance_metric"] = (
             self.distance_metric_dropdown.currentText()
+        )
+
+        self.settings["overlay"]["font_size"] = (
+            self.font_size_spinbox.value()
+        )
+
+        self.settings["overlay"]["thumbnail_size"] = (
+            self.thumbnail_size_spinbox.value()
         )
 
         self.save_settings()
