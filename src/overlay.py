@@ -101,18 +101,19 @@ class CursorOverlay(QWidget):
         )
 
         text = ""
+        lines = []
 
         if overlay_settings["colour_name"]:
-            text += f"{nearest_colour.name}\n"
+            lines.append(nearest_colour.name)
 
         if overlay_settings["rgb"]:
             r, g, b = colour.rgb
-            text += f"RGB: ({r}, {g}, {b})\n"
+            lines.append(f"RGB: ({r}, {g}, {b})")
 
         if overlay_settings["hex"]:
-            text += f"HEX: {colour.hex}"
+            lines.append(f"HEX: {colour.hex}")
 
-        self.text_label.setText(text)
+        self.text_label.setText("\n".join(lines))
 
         self.pixel_colour_thumbnail.set_colour(colour)
         self.nearest_colour_thumbnail.set_colour(nearest_colour)
@@ -124,6 +125,11 @@ class CursorOverlay(QWidget):
         self.nearest_colour_thumbnail.setVisible(
             overlay_settings["nearest_colour_thumbnail"]
         )
+
+        show_labels = overlay_settings["nearest_colour_thumbnail"]
+
+        self.pixel_colour_thumbnail.set_label_visible(show_labels)
+        self.nearest_colour_thumbnail.set_label_visible(show_labels)
 
         self.adjustSize()
 
@@ -164,3 +170,6 @@ class ColourThumbnail(QWidget):
                 border-radius: 0px;
             }}
         """)
+
+    def set_label_visible(self, visible: bool):
+        self.label.setVisible(visible)
