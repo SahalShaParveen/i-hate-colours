@@ -1,0 +1,6 @@
+
+keyboard
+PySide6
+colour-science
+pyautogui
+numpy
